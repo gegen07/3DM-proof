@@ -12,9 +12,10 @@ def generateSetOfTriples(num_vertices, num_triples):
 def non_deterministic_3dm(triples, k):
     M = []
     q = random.randint(1, k)
+    
     for _ in range(q):
         M.append(random.choice(list(triples)))
-    print(M)
+    
     t = M[0]
     v1, v2, v3 = t
     if v1 == v2 or v1 == v3 or v2 == v3:

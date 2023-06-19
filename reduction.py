@@ -17,9 +17,6 @@ def variable_gadget(v):
     n1 = v[0]
     n2 = v[1]
 
-    print(n1)
-    print(n2)
-
     for i in range(1,4+1):
         if i % 2 == 0:
             t.add((n1[i], n1[((i+1)%4)], n2[i]))
@@ -157,7 +154,7 @@ def sol(t, lits, clauses):
     
     return sol
 
-def translate_back(sol, cnf):
+def translate_back(sol):
     lits = {}
 
     for x in sol:  ## translate to literals values
@@ -166,6 +163,9 @@ def translate_back(sol, cnf):
         elif x[0][0] == 'a' and int(x[2][2]) % 2 != 0:
             lits[int(x[2][1])] = 0
 
+    return lits
+
+def solve_cnf(cnf, lits):
     cl1, cl2 = cnf.split("and")
     cl1 = list(map(lambda x: x.strip(" ").strip("(").strip(")"), cl1.split("or")))
     cl2 = list(map(lambda x: x.strip(" ").strip("(").strip(")"), cl2.split("or")))
@@ -189,13 +189,15 @@ def translate_back(sol, cnf):
 if __name__ == "__main__":
     cnf = "(x1 or ~x2 or x3) and (~x1 or x2 or x3)"
     t = translateSATto3DM(cnf)
-    print(f"3-SAT Reduction to 3DM: {t}")
+    print(f"3-SAT Reduction to 3DM: {sorted(t)}")
 
     lits = [False, False, False]
     clauses = [[True, False, True], [False, True, True]]
 
-    sol = sol(t, lits, clauses)
-    print(f"SOLUTION TO 3DM: {sol}")
+    s = sol(t, lits, clauses)
+    print(f"SOLUTION TO 3DM: {sorted(s)}")
 
-    print(f"ANSWER FOR 3-SAT: {translate_back(sol, cnf)}")
+    lits_back = translate_back(s)
+    print(f"LITS TRANSLATED BACK: {lits_back}")
+    print(f"ANSWER FOR 3-SAT: {solve_cnf(cnf, lits_back)}")
   
